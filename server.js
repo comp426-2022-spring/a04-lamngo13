@@ -4,6 +4,10 @@ import { createRequire } from 'module'
 const require = createRequire(import.meta.url)
 const express = require('express')
 const app = express()
+const db = require("./database.js")
+// Make Express use its own built-in body parser for both urlencoded and JSON body data.
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 
 const argv = require('minimist')(process.argv.slice(2))
 argv['port']
