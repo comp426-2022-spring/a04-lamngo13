@@ -1,6 +1,6 @@
-import { coinFlip, coinFlips, countFlips, flipACoin} from './modules/coin.mjs'
-import { createRequire } from 'module'
-import { isArgumentsObject } from 'util/types'
+//import { coinFlip, coinFlips, countFlips, flipACoin} from './modules/coin.mjs'
+//import { createRequire } from 'module'
+//import { isArgumentsObject } from 'util/types'
 
 const require = createRequire(import.meta.url)
 const express = require('express')
@@ -94,6 +94,7 @@ app.get('/app/', (req, res) => { //CHECKPOINTT
         res.end(res.statusCode+ ' ' +res.statusMessage)
     });
 
+/*
 //RANDOM COIN FLIP ENDPOINT /app/flip/
 app.get('/app/flip/', (req, res) => {
     // Respond with status 200
@@ -144,7 +145,7 @@ app.get('/app/flip/call/tails', (req, res) => {
     res.json(abstraction);
     //res.json(flipACoin("tails"))
 });
-
+*/
 
 // Default response for any other request
 app.use(function(req, res){
