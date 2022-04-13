@@ -44,8 +44,8 @@ if (argv.help || argv.h) {
 
 //log stuff
 if (argv.log == true) {
-    let zlog = fs.createWriteStream('access.log', { flags: 'a' })
-    app.use(morgan('combined', { stream: mylog }))
+    const zlog = fs.createWriteStream('access.log', { flags: 'a' })
+    app.use(morgan('combined', { stream: zlog }))
 } else {
     app.use(morgan('combined'))
 }
@@ -72,7 +72,7 @@ app.use((req, res, next) => {
 })
 
 //more log stuff
-app.get('app/log/access', (req, res) => {
+app.get('/app/log/access', (req, res) => {
     try {
         const stmt = db.prepare('SELECT * FROM accesslog').all()
         res.status(200).json(stmt)
@@ -82,7 +82,7 @@ app.get('app/log/access', (req, res) => {
 });
 
 app.get('/app/error', (req, res) => {
-    throw new Error('ERRO BUCKO')
+    throw new Error('Error test successful')
 }); 
 
 app.get('/app/', (req, res) => { //CHECKPOINTT
@@ -90,7 +90,7 @@ app.get('/app/', (req, res) => { //CHECKPOINTT
         res.statusCode = 200;
     // Respond with status message "OK"
         res.statusMessage = 'OK';
-        res.writeHead( res.statusCode, { 'Content-Type' : 'text/plain' });
+        res.writeHead(res.statusCode, { 'Content-Type' : 'text/plain' });
         res.end(res.statusCode+ ' ' +res.statusMessage)
     });
 
@@ -154,13 +154,13 @@ app.use(function(req, res){
 
 //END STUFF MAYBE PUTIN ANOTHER PLACE
 // Check status code endpoint
-app.get('/app/', (req, res) => {
-    res.statusCode = 200;
-    res.statusMessage = 'OK';
-    res.writeHead(res.statusCode, { 'Content-Type' : 'text/plain'});
-    res.end(res.statusCode+ ' ' +res.statusMessage) });
+//app.get('/app/', (req, res) => {
+  //  res.statusCode = 200;
+   // res.statusMessage = 'OK';
+   // res.writeHead(res.statusCode, { 'Content-Type' : 'text/plain'});
+   // res.end(res.statusCode+ ' ' +res.statusMessage) });
 
 // If not recognized request (other requests)
-app.use(function(req, res){
-    res.status(404).send('404 NOT FOUND')
-});
+//app.use(function(req, res){
+  //  res.status(404).send('404 NOT FOUND')
+//});
