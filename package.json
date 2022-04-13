@@ -5,6 +5,7 @@
     "minimist": "^1.2.6",
     "node": "^17.7.2"
   },
+  "type": "module",
   "scripts": {
     "start": "node server.js"
   },
