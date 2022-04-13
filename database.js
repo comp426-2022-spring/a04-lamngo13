@@ -4,7 +4,7 @@
 const Database = require('better-sqlite3');
 
 // Connect to a database or create one if it doesn't exist yet.
-const db = new Database('user.db');
+const db = new Database('log.db');
 
 // Is the database initialized or do we need to initialize it?
 const stmt = db.prepare(`
@@ -28,7 +28,7 @@ if (row === undefined) {
 // Execute SQL commands that we just wrote above.
     db.exec(sqlInit);
 // Echo information about what we just did to the console.
-    console.log('Your database has been initialized with a new table and two entries containing a username and password.');
+    //console.log('Your database has been initialized with a new table and two entries containing a username and password.');
 } else {
 // Since the database already exists, echo that to the console.
     console.log('Database exists.')
