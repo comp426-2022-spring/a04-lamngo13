@@ -14,9 +14,9 @@ const fs = require('fs')
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-const argv = require('minimist')(process.argv.slice(2))
-argv['port']
-const port = argv['port'] || process.env.PORT || 5555
+const argument = require('minimist')(process.argv.slice(2))
+//argv['port']
+const port = argument['port'] || process.env.PORT || 5555
 
 //start an app server
 const server = app.listen(port, () => { 
@@ -37,18 +37,26 @@ server.js [options]
   --help	Return this message and exit.
 `);
 // If --help or -h, echo help text to STDOUT and exit
-if (argv.help || argv.h) {
+if (argument.help || argument.h) {
     console.log(help)
     process.exit(0)
 }
 
 //log stuff
-if (argv.log == true) {
+/*
+if (argument.log == true) {
+    //LOWKEY SHOULD TRUE BE A STRING THO
     const zlog = fs.createWriteStream('access.log', { flags: 'a' })
     app.use(morgan('combined', { stream: zlog }))
 } else {
     app.use(morgan('combined'))
 }
+*/
+//REDOING THIS BC IDK MAN
+if (argument.log != 'false') {
+    const WRITESTREAM = fs.createWriteStream('access.log', { flags: 'a' })
+    app.use(morgan('combined', { stream: WRITESTREAM }))
+  }
 
 //fields
 app.use((req, res, next) => {
@@ -71,7 +79,16 @@ app.use((req, res, next) => {
     next();
 })
 
-//more log stuff
+app.get('/app/', (req, res) => { //CHECKPOINTT
+    // Respond with status 200
+        res.statusCode = 200;
+    // Respond with status message "OK"
+        res.statusMessage = 'OK';
+        res.writeHead(res.statusCode, { 'Content-Type' : 'text/plain' });
+        res.end(res.statusCode+ ' ' +res.statusMessage)
+    });
+
+//more log stuff ERROR HANDLING
 app.get('/app/log/access', (req, res) => {
     try {
         const stmt = db.prepare('SELECT * FROM accesslog').all()
@@ -85,14 +102,7 @@ app.get('/app/error', (req, res) => {
     throw new Error('Error test successful')
 }); 
 
-app.get('/app/', (req, res) => { //CHECKPOINTT
-    // Respond with status 200
-        res.statusCode = 200;
-    // Respond with status message "OK"
-        res.statusMessage = 'OK';
-        res.writeHead(res.statusCode, { 'Content-Type' : 'text/plain' });
-        res.end(res.statusCode+ ' ' +res.statusMessage)
-    });
+
 
 /*
 //RANDOM COIN FLIP ENDPOINT /app/flip/
