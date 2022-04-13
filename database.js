@@ -17,9 +17,13 @@ if (row === undefined) {
 // Echo information about what you are doing to the console.
     console.log('Your database appears to be empty. I will initialize it now.');
 // Set a const that will contain your SQL commands to initialize the database.
+    //const sqlInit = `
+    //    CREATE TABLE userinfo ( id INTEGER PRIMARY KEY, username TEXT, password TEXT );
+    //    INSERT INTO userinfo (username, password) VALUES ('user1','supersecurepassword'),('test','anotherpassword');
+    //`;
     const sqlInit = `
-        CREATE TABLE userinfo ( id INTEGER PRIMARY KEY, username TEXT, password TEXT );
-        INSERT INTO userinfo (username, password) VALUES ('user1','supersecurepassword'),('test','anotherpassword');
+        CREATE TABLE accesslog ( id INTEGER PRIMARY KEY, remoteaddr VARCHAR, remoteuser VARCHAR, time VARCHAR, method VARCHAR, url VARCHAR, protocol VARCHAR,
+         httpversion NUMERIC, status INTEGER, referer TEXT, useragent TEXT);
     `;
 // Execute SQL commands that we just wrote above.
     db.exec(sqlInit);
