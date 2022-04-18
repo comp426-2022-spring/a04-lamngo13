@@ -11,17 +11,12 @@ const fs = require('fs')
 //make require bettersqulite3?
 
 // Make Express use its own built-in body parser for both urlencoded and JSON body data.
-app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
+//app.use(express.urlencoded({ extended: true }));
+//app.use(express.json());
 
 const argument = require('minimist')(process.argv.slice(2))
-//argv['port']
-const port = argument['port'] || process.env.PORT || 5555
-
-//start an app server
-const server = app.listen(port, () => { 
-    console.log('App listening on port %PORT%'.replace('%PORT%',port)) 
-});
+//argument['port']
+const port = argument.port || process.env.PORT || 5555
 
 //help stuff
 const help = (`
@@ -42,23 +37,11 @@ if (argument.help || argument.h) {
     process.exit(0)
 }
 
-//log stuff
-/*
-if (argument.log == true) {
-    //LOWKEY SHOULD TRUE BE A STRING THO
-    const zlog = fs.createWriteStream('access.log', { flags: 'a' })
-    app.use(morgan('combined', { stream: zlog }))
-} else {
-    app.use(morgan('combined'))
-}
-*/
-//REDOING THIS BC IDK MAN
-if (argument.log != 'false') {
-    const WRITESTREAM = fs.createWriteStream('access.log', { flags: 'a' })
-    app.use(morgan('combined', { stream: WRITESTREAM }))
-  }
+//start an app server
+const server = app.listen(port, () => { 
+    console.log('App listening on port %PORT%'.replace('%PORT%',port)) 
+});
 
-//fields
 app.use((req, res, next) => {
     let logdata = {
       remoteaddr: req.ip,
@@ -79,16 +62,57 @@ app.use((req, res, next) => {
     next();
 })
 
-app.get('/app/', (req, res) => { //CHECKPOINTT
+if (argument.debug) {
+    app.get('/app/log/access', (req, res) => {
+        const stmt = db.prepare('SELECT * FROM accesslog').all()
+        res.status(200).json(stmt)
+        //try {
+          //  const stmt = db.prepare('SELECT * FROM accesslog').all()
+          //  res.status(200).json(stmt)
+        //} catch {
+         //   console.error(e)
+       // }
+    });
+    
+    app.get('/app/error', (req, res) => {
+        throw new Error('Error test successful')
+    }); 
+}
+
+//log stuff
+/*
+if (argument.log == true) {
+    //LOWKEY SHOULD TRUE BE A STRING THO
+    const zlog = fs.createWriteStream('access.log', { flags: 'a' })
+    app.use(morgan('combined', { stream: zlog }))
+} else {
+    app.use(morgan('combined'))
+}
+*/
+//REDOING THIS BC IDK MAN
+//isn't it a string?????
+if (argument.log != 'false') {
+    const WRITESTREAM = fs.createWriteStream('./access.log', { flags: 'a' })
+    app.use(morgan('combined', { stream: WRITESTREAM }))
+  }
+
+//fields
+
+
+app.get('/app', (req, res) => { //CHECKPOINTT
     // Respond with status 200
         res.statusCode = 200;
     // Respond with status message "OK"
         res.statusMessage = 'OK';
         res.writeHead(res.statusCode, { 'Content-Type' : 'text/plain' });
-        res.end(res.statusCode+ ' ' +res.statusMessage)
+        res.status(res.statusCode).end(res.statusCode + ' ' + res.statusMessage)
+        //res.end(res.statusCode+ ' ' +res.statusMessage)
     });
 
 //more log stuff ERROR HANDLING
+//added clause abt debugging
+
+/*
 app.get('/app/log/access', (req, res) => {
     try {
         const stmt = db.prepare('SELECT * FROM accesslog').all()
@@ -101,6 +125,7 @@ app.get('/app/log/access', (req, res) => {
 app.get('/app/error', (req, res) => {
     throw new Error('Error test successful')
 }); 
+*/
 
 
 
@@ -159,6 +184,7 @@ app.get('/app/flip/call/tails', (req, res) => {
 
 // Default response for any other request
 app.use(function(req, res){
+    res.type('text/plain')
     res.status(404).send('404 NOT FOUND')
 });
 
